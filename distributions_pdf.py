@@ -16,6 +16,24 @@ def lognormal_pdf(x, mu, sigma):
     assert x.all() > 0, "x must be greater than 0"
     return 1/(x*sigma*np.sqrt(2*np.pi)) * np.exp(-0.5*((np.log(x)-mu)/sigma)**2)
 
+def lognormal_offset_scaled_pdf(x, y0, A, w, c):
+    """
+    Custom Lognormal PDF with offset and scaling.
+
+    Parameters:
+        x (array): Input values.
+        y0 (float): Constant offset.
+        A (float): Amplitude scaling factor.
+        w (float): Shape parameter (related to standard deviation of ln(x)).
+        c (float): Location parameter (related to mean of ln(x)).
+
+    Returns:
+        array: Computed PDF values.
+    """
+    # Ensure x > 0 to avoid log(0)
+    x = np.maximum(x, 1e-10)
+    return y0 + A / (np.sqrt(2 * np.pi) * w * x) * np.exp(-(np.log(x)/(x/c))**2 / (2 * w**2))
+
 # Gaussian PDF (same as Normal)
 def gaussian_pdf(x, mu, sigma):
     return normal_pdf(x, mu, sigma)
